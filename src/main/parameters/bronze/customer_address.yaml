@@ -1,0 +1,11 @@
+# ETL job configuration
+env: dev
+batch_load: batch
+load_type: full          # Options: full / incremental
+source_table: SalesLT.CustomerAddress
+audit_table: adxanalytics.ETL_JOB_AUDIT
+create_user: adx_batch
+pk_columns:
+  - AddressID
+  - CustomerID
+incremental_column:
