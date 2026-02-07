@@ -2,6 +2,7 @@
 env: dev
 batch_load: batch
 load_type: full          # Options: full / incremental
+database_name: adxanalyticsdevsql
 source_table: SalesLT.CustomerAddress
 audit_table: adxanalytics.ETL_JOB_AUDIT
 create_user: adx_batch

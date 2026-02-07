@@ -22,6 +22,7 @@ class Parameters:
         self.pk_columns = param_config["pk_columns"]
         self.incremental_column = param_config["incremental_column"]
         self.env = param_config["env"]
+        self.database_name = param_config["database_name"]
         print("Completed: Setting the params in Parameter Class")
 
     

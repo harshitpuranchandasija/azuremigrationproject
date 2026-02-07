@@ -40,15 +40,15 @@
 
 from argparse import ArgumentParser
 import sys,os
-
-import sys
-
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import lit
 # Add absolute path to src
 #sys.path.append("/Workspace/Repos/azureharshit123@gmail.com/azuremigrationproject/src")
 
 # Absolute import
-from Parameters import Parameters
-from ReadCredential import ReadCredentials
+from src.main.etl.bronze.Parameters import Parameters
+from src.main.etl.bronze.ReadCredential import ReadCredentials
+from src.main.etl.bronze.Connections import Connections
 
 # sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "../../../", "")))
 class ETLReadSourceData:
@@ -57,19 +57,30 @@ class ETLReadSourceData:
         self.dbutils = dbutils
         print("Initializing the ETLReadSourceData")
         self.params = Parameters(self.file_name)
-        self.credential = ReadCredentials(self.params.env)
+        app_name = "ETLReadSourceData" + '_' + self.params.source_table
+        self.spark = SparkSession.builder.appName(app_name).getOrCreate()
+        self.credential = ReadCredentials(self.params.env,dbutils)
+        self.conn = Connections(self.credential,self.params,self.spark)
+
+    def transform(self,src_df):
+        print("BEGIN: Tranforming the dataframe")
+        transformed_df =  src_df.withColumn("create_user",lit(self.params.create_user))
+        print("COMPLETED: Tranforming the dataframe")
+        return transformed_df
 
     def run(self):
-        print("Hello")
+        src_df = self.conn.get_source_df()
+        transformed_df = self.transform(src_df)
+        transformed_df.show(10)
 
-    def main(parameterfile,dbutils):
-        try:
-            print("Reading Arguments")
-            etl_obj = ETLReadSourceData(parameterfile,dbutils)
-            etl_obj.run()
-        except (Exception,ValueError) as e:
-            print("ETLReadSourceData Failed")
-            print(str(e)[:400])
+def main(parameterfile,dbutils):
+    try:
+        print("Reading Arguments")
+        etl_obj = ETLReadSourceData(parameterfile,dbutils)
+        etl_obj.run()
+    except (Exception,ValueError) as e:
+        print("ETLReadSourceData Failed")
+        print(str(e)[:400])
 
 
 
