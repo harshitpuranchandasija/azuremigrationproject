@@ -15,6 +15,7 @@ class Parameters:
     def setParameter(self,param_config):
         print("Started: Setting the params in Parameter Class")
         print(param_config)
+        self.batch_load = param_config["batch_load"]
         self.load_type = param_config["load_type"]
         self.source_table = param_config["source_table"]
         self.audit_table = param_config["audit_table"]

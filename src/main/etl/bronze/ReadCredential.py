@@ -14,5 +14,9 @@ class ReadCredentials:
         print("BEGIN: *******SETTING CRED**********")
         self.sql_server_user = dbutils.secrets.get(scope = scope_user,key = akv_user)
         self.sql_server_pass = dbutils.secrets.get(scope = scope_password,key = akv_password)
+        #Service Principle
+        self.sp_client_secret = dbutils.secrets.get(scope = "devkeyvaultscope", key = "sp-client-secret")
+        self.sp_client_id = dbutils.secrets.get(scope = "devkeyvaultscope", key = "sp-clientid")
+        self.sp_directoryid = dbutils.secrets.get(scope = "devkeyvaultscope", key = "sp-directoryid")
         print("COMPLETED: *******SETTING CRED**********")
         
